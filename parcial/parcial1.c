@@ -166,4 +166,4 @@ int main()
         printf("El monto total que se recaudará con estas entregas es de: %.2f\n", totalventa);
     
     }
-    //(100*50 + 200*50)*1.35
+    //(200*50 + 100*50)*1.35
