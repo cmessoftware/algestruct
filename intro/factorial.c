@@ -29,5 +29,4 @@ long factorial(int n)
     }
 
     return f;
-
 }

@@ -67,6 +67,8 @@ void clear_vector(int vector[],int tam)
 void armar_lista_posiciones(int posiciones[],int tam, char pos[])
 {
     int j = 0;
+    
+
     for(int i = 0 ; posiciones[i] != 0 ; i++)
     {
         pos[j] = posiciones[i];
