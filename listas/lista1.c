@@ -14,7 +14,7 @@
  
 struct node{
        int nro;        // en este caso es un numero entero
-       struct node *sgte;
+       struct node *next;
 };
  
 typedef struct node *Tlist;
@@ -25,7 +25,7 @@ void add(Tlist *list, int value)
     Tlist q;
     q = malloc(sizeof(Tlist));
     q->nro = value;
-    q->sgte = *list;
+    q->next = *list;
     *list  = q;
 }
  
@@ -34,7 +34,7 @@ void add_end(Tlist list, int value)
     Tlist t, q = malloc(sizeof(Tlist));
  
     q->nro  = value;
-    q->sgte = NULL;
+    q->next = NULL;
  
     if(list==NULL)
     {
@@ -43,11 +43,11 @@ void add_end(Tlist list, int value)
     else
     {
         t = list;
-        while(t->sgte!=NULL)
+        while(t->next!=NULL)
         {
-            t = t->sgte;
+            t = t->next;
         }
-        t->sgte = q;
+        t->next = q;
     }
  
 }
@@ -88,34 +88,54 @@ void insert_by_value(Tlist *list, int value)
         return;
     }
 
-    //for( ; list->sgte != NULL; list = list->sgte)
+    //for( ; list->next != NULL; list = list->next)
     //Recorro la lista
-    Tlist current;
+    Tlist prev = lst;
   
-    while(lst->sgte != NULL)
+    while(lst->next != NULL)
     {
-        if(lst->nro > value)
+        if(prev == lst && lst->nro > value)  //Este nuevo valor se debe agregar al ppio.
         {
-            current->sgte = q;
-            q->sgte = list;    
+          add(&lst,value);
+          *list = lst;
+          return;            
+        } 
+        else if(lst->nro > value)
+        {
+            prev->next = q;
+            q->next = lst;   
             return;
         }
 
-        current = list; 
-        lst = lst->sgte;
+        prev = lst;
+        lst = lst->next;
+    }
+    
+    //Verificar si values sera el ultimo nodo o el anteultimo.
+    if(lst->nro > value)  //Es el anteultimo
+    {
+        prev->next = q;
+        lst->next = NULL;
+        q->next = lst;
+        return;
+    }
+    else //Es el ultimo.
+    {
+        q->next = NULL;
+        lst->next = q;
+        return;
     }
 
-    //Si llego hasta aca el nodo a insertar va AL FINAL de la lista.
-    q->sgte = NULL;
-    lst->sgte = q;
-
     return;
-
 }
 
 
-
-void insert_by_pos(Tlist list, int pos, int value)
+/// @brief Si laposicion existe devulve pos sino -1
+/// @param list 
+/// @param pos 
+/// @param value 
+/// @return 
+int insert_by_pos(Tlist list, int pos, int value)
 {
     Tlist q, t;
     int i;
@@ -124,7 +144,7 @@ void insert_by_pos(Tlist list, int pos, int value)
  
     if(pos==1)
     {
-        q->sgte = list;
+        q->next = list;
         list = q;
     }
     else
@@ -136,34 +156,39 @@ void insert_by_pos(Tlist list, int pos, int value)
         {
             if(i==pos+x)
             {
-                q->sgte = t->sgte;
-                t->sgte = q;
-                return;
+                q->next = t->next;
+                t->next = q;
+                return pos;
             }
-            t = t->sgte;
+            t = t->next;
         }
     }
-    printf("   Error...Posicion no encontrada..!\n");
+    return -1;
 }
  
-void search(Tlist list, int value)
+/// @brief Si lo encuentra devulve la posiscion sino -1.
+/// @param list 
+/// @param value 
+/// @return 
+int search(Tlist list, int value)
 {
     Tlist q = list;
     int i = 1, band = 0;
+    int pos = -1;
  
     while(q!=NULL)
     {
         if(q->nro==value)
         {
-            printf("\n Encontrada en posicion %d \n",i);
+            pos = i;
             band = 1;
         }
-        q = q->sgte;
+        q = q->next;
         i++;
     }
  
     if(band==0)
-        printf("\n\n Numero no encontrado..!\n");
+        return  pos;
 }
  
 void show_list(Tlist list)
@@ -172,14 +197,17 @@ void show_list(Tlist list)
  
      while(list != NULL)
      {
-          printf("' '%d : %d\n", i+1 , list->nro);
-          list = list->sgte;
+          printf("%d : %d\n", i+1 , list->nro);
+          list = list->next;
           i++;
      }
 }
  
- 
-void delete(Tlist list, int value)
+/// @brief si no encuentra el nodo a borrar devuelve -1 sino 0.
+/// @param list 
+/// @param value 
+/// @return 
+int deleteElement(Tlist list, int value)
 {
     Tlist p, ant;
     p = list;
@@ -191,19 +219,19 @@ void delete(Tlist list, int value)
             if(p->nro==value)
             {
                 if(p==list)
-                    list = list->sgte;
+                    list = list->next;
                 else
-                    ant->sgte = p->sgte;
+                    ant->next = p->next;
  
-                delete(p,value);
-                return;
+                //delete(p,value);
+                return 0;
             }
             ant = p;
-            p = p->sgte;
+            p = p->next;
         }
     }
     else
-        printf("List empty!!");
+        return -1;
 }
  
 void deleteDuplicate(Tlist list, int value)
@@ -218,26 +246,24 @@ void deleteDuplicate(Tlist list, int value)
         {
             if(q==list) // primero elemento
             {
-                list = list->sgte;
-                delete(q,value);
+                list = list->next;
+                //delete(q,value);
                 q = list;
             }
             else
             {
-                ant->sgte = q->sgte;
-                delete(q,value);
-                q = ant->sgte;
+                ant->next = q->next;
+                //delete(q,value);
+                q = ant->next;
             }
         }
         else
         {
             ant = q;
-            q = q->sgte;
+            q = q->next;
         }
  
     }// fin del while
-   
-    printf("\n\n valuees eliminados..!\n");
 }
  
 void menu1()
@@ -263,21 +289,41 @@ int main()
 {
     Tlist L = NULL;
     int op;     // opcion del menu
-    int data = 10;  // elemenento a ingresar
+    int LIST_SIZE = 20;
+    int data = 1000;  // elemenento a ingresar
     int i=0;
 
-    int nros[5] = {-1,5,1,9,2};
+    int nros[20] = {-1,-5,1,9,2,6,32,100,-23,-100,44,22,-34,5,0,56,43,-90,88,3};
 
-    while(i < 5)
+    srand(time(NULL));
+    while(i < LIST_SIZE)
     {
-        insert_by_value(&L,nros[i]);
+        //add(&L,rand()%data);
+        add(&L,nros[i]);
         i++;
     }
 
-    // srand(time(NULL));
-    // while(i-- > 0)
-    //     add(&L,rand()%dato);
- 
+    printf("Lista desordenada\n");
+    show_list(L);
+    puts("--------------");
+    printf("Ordeno la lista\n");
+    puts("--------------");
+    
+    Tlist listAux = NULL;
+    while(L != NULL)
+    {
+        insert_by_value(&listAux,L->nro);
+        //Muestro la lista mientras se va creando.
+        //show_list(L);
+        L = L->next;
+    }
+    printf("Lista ordenada\n");
+    show_list(listAux);
+    puts("--------------");
+
+    deleteElement(listAux,44);
+    
+    printf("Verifico si borro adecuadamente.\n");
     show_list(L);
 
     return 0;
