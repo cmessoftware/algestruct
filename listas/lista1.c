@@ -1,112 +1,48 @@
 #include<stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
-typedef int bool;
-
-struct device
-{
-    int id;
-    char name[20];
-    char address[20];
-    bool status;
-    struct device *pnext;
-};
-
-void add_element(struct data **L, struct device data);
-struct device get_data();
-
-void main(void)
-{
-
-    struct device *L = NULL;
-    struct device data = get_data();
-    
-    while(data.id < 0)
-    {
-        struct device data = get_data();
-        add_element(&L,data);
-    }
-
-}
-
-struct device get_data()
-{
-    struct device data;
-    data.address[] = "185.23.6.5";
-    data.id = 121;
-    data.status = 1;
-    data.name[] = "Scanner XYU";
-
-    return data;
-}
-
-void add_element(struct data **L, struct device data)
-{
-
-    if(**L == NULL) //Es el primero.
-    {
-        *L = (struct device*)malloc(sizeof(struct device));
-
-        (*L)->name = data.name;
-        (*L)->address = data.address;
-        (*L)->id = data.id
-        (*L)->pnext = NULL;
-    }
-    else
-    {
-        *L = (struct device*)malloc(sizeof(struct device));
-
-        (*L)->name = data.name;
-        (*L)->address = data.address;
-        (*L)->id = data.id
-        (*L)->pnext = NULL;
-
-    }
-    
-}
 
 /*
-* C++ - Listas Enlazadas simples en c++
+* C++ - lists Enlazadas simples en c++
 * Copyright 2014 Martin Cruz Otiniano 
 *
 * Description: Inserta, elimina, busca, reporta
 * Site: martincruz.me
 */
-
+#include <stdio.h>
  
-#include <iostream>
-#include <stdlib.h>
-using namespace std;
- 
-struct nodo{
+struct node{
        int nro;        // en este caso es un numero entero
-       struct nodo *sgte;
+       struct node *sgte;
 };
  
-typedef struct nodo *Tlista;
+typedef struct node *Tlist;
  
-void insertarInicio(Tlista &lista, int valor)
+ 
+void add(Tlist *list, int value)
 {
-    Tlista q;
-    q = new(struct nodo);
-    q->nro = valor;
-    q->sgte = lista;
-    lista  = q;
+    Tlist q;
+    q = malloc(sizeof(Tlist));
+    q->nro = value;
+    q->sgte = *list;
+    *list  = q;
 }
  
-void insertarFinal(Tlista &lista, int valor)
+void add_end(Tlist list, int value)
 {
-    Tlista t, q = new(struct nodo);
+    Tlist t, q = malloc(sizeof(Tlist));
  
-    q->nro  = valor;
+    q->nro  = value;
     q->sgte = NULL;
  
-    if(lista==NULL)
+    if(list==NULL)
     {
-        lista = q;
+        list = q;
     }
     else
     {
-        t = lista;
+        t = list;
         while(t->sgte!=NULL)
         {
             t = t->sgte;
@@ -116,16 +52,17 @@ void insertarFinal(Tlista &lista, int valor)
  
 }
  
-int insertarAntesDespues()
+int inserBeforeAfter()
 {
-    int _op, band;
-    cout<<endl;
-    cout<<"\t 1. Antes de la posicion           "<<endl;
-    cout<<"\t 2. Despues de la posicion         "<<endl;
+    int op, band;
+    printf("\n");
+    printf("\t 1. Antes de la posicion           \n");
+    printf("\t 2. Despues de la posicion         \n");
  
-    cout<<"\n\t Opcion : "; cin>> _op;
+    printf("\n\t Opcion : "); 
+    scanf("%d",&op);
  
-    if(_op==1)
+     if(op==1)
         band = -1;
     else
         band = 0;
@@ -133,22 +70,67 @@ int insertarAntesDespues()
     return band;
 }
  
-void insertarElemento(Tlista &lista, int valor, int pos)
+/// @brief Insercion ordenada de menor a mayor por nro. Suponemos todos diferentes.
+/// @param list 
+/// @param value 
+void insert_by_value(Tlist *list, int value)
 {
-    Tlista q, t;
+    Tlist q;
+    Tlist lst = *list;
+
+    q = malloc(sizeof(Tlist));
+    q->nro = value;
+
+    //Es lista vacia --> agrego porque es el primero.
+    if(lst == NULL)
+    {
+        add(list,value);
+        return;
+    }
+
+    //for( ; list->sgte != NULL; list = list->sgte)
+    //Recorro la lista
+    Tlist current;
+  
+    while(lst->sgte != NULL)
+    {
+        if(lst->nro > value)
+        {
+            current->sgte = q;
+            q->sgte = list;    
+            return;
+        }
+
+        current = list; 
+        lst = lst->sgte;
+    }
+
+    //Si llego hasta aca el nodo a insertar va AL FINAL de la lista.
+    q->sgte = NULL;
+    lst->sgte = q;
+
+    return;
+
+}
+
+
+
+void insert_by_pos(Tlist list, int pos, int value)
+{
+    Tlist q, t;
     int i;
-    q = new(struct nodo);
-    q->nro = valor;
+    q = malloc(sizeof(Tlist));
+    q->nro = value;
  
     if(pos==1)
     {
-        q->sgte = lista;
-        lista = q;
+        q->sgte = list;
+        list = q;
     }
     else
     {
-        int x = insertarAntesDespues();
-        t = lista;
+        int x = inserBeforeAfter();
+        t = list;
  
         for(i=1; t!=NULL; i++)
         {
@@ -161,19 +143,19 @@ void insertarElemento(Tlista &lista, int valor, int pos)
             t = t->sgte;
         }
     }
-    cout<<"   Error...Posicion no encontrada..!"<<endl;
+    printf("   Error...Posicion no encontrada..!\n");
 }
  
-void buscarElemento(Tlista lista, int valor)
+void search(Tlist list, int value)
 {
-    Tlista q = lista;
+    Tlist q = list;
     int i = 1, band = 0;
  
     while(q!=NULL)
     {
-        if(q->nro==valor)
+        if(q->nro==value)
         {
-            cout<<endl<<" Encontrada en posicion "<< i <<endl;
+            printf("\n Encontrada en posicion %d \n",i);
             band = 1;
         }
         q = q->sgte;
@@ -181,39 +163,39 @@ void buscarElemento(Tlista lista, int valor)
     }
  
     if(band==0)
-        cout<<"\n\n Numero no encontrado..!"<< endl;
+        printf("\n\n Numero no encontrado..!\n");
 }
  
-void reportarLista(Tlista lista)
+void show_list(Tlist list)
 {
      int i = 0;
  
-     while(lista != NULL)
+     while(list != NULL)
      {
-          cout <<' '<< i+1 <<") " << lista->nro << endl;
-          lista = lista->sgte;
+          printf("' '%d : %d\n", i+1 , list->nro);
+          list = list->sgte;
           i++;
      }
 }
  
  
-void eliminarElemento(Tlista &lista, int valor)
+void delete(Tlist list, int value)
 {
-    Tlista p, ant;
-    p = lista;
+    Tlist p, ant;
+    p = list;
  
-    if(lista!=NULL)
+    if(list!=NULL)
     {
         while(p!=NULL)
         {
-            if(p->nro==valor)
+            if(p->nro==value)
             {
-                if(p==lista)
-                    lista = lista->sgte;
+                if(p==list)
+                    list = list->sgte;
                 else
                     ant->sgte = p->sgte;
  
-                delete(p);
+                delete(p,value);
                 return;
             }
             ant = p;
@@ -221,29 +203,29 @@ void eliminarElemento(Tlista &lista, int valor)
         }
     }
     else
-        cout<<" Lista vacia..!";
+        printf("List empty!!");
 }
  
-void eliminaRepetidos(Tlista &lista, int valor)
+void deleteDuplicate(Tlist list, int value)
 {
-    Tlista q, ant;
-    q = lista;
-    ant = lista;
+    Tlist q, ant;
+    q = list;
+    ant = list;
  
     while(q!=NULL)
     {
-        if(q->nro==valor)
+        if(q->nro==value)
         {
-            if(q==lista) // primero elemento
+            if(q==list) // primero elemento
             {
-                lista = lista->sgte;
-                delete(q);
-                q = lista;
+                list = list->sgte;
+                delete(q,value);
+                q = list;
             }
             else
             {
                 ant->sgte = q->sgte;
-                delete(q);
+                delete(q,value);
                 q = ant->sgte;
             }
         }
@@ -255,22 +237,22 @@ void eliminaRepetidos(Tlista &lista, int valor)
  
     }// fin del while
    
-    cout<<"\n\n Valores eliminados..!"<<endl;
+    printf("\n\n valuees eliminados..!\n");
 }
  
 void menu1()
 {
-    cout<<"\n\t\tLISTA ENLAZADA SIMPLE\n\n";
-    cout<<" 1. INSERTAR AL INICIO               "<<endl;
-    cout<<" 2. INSERTAR AL FINAL                "<<endl;
-    cout<<" 3. INSERTAR EN UNA POSICION         "<<endl;
-    cout<<" 4. REPORTAR LISTA                   "<<endl;
-    cout<<" 5. BUSCAR ELEMENTO                  "<<endl;
-    cout<<" 6. ELIMINAR ELEMENTO 'V'            "<<endl;
-    cout<<" 7. ELIMINAR ELEMENTOS CON VALOR 'V' "<<endl;
-    cout<<" 8. SALIR                            "<<endl;
+    printf("\n\t\tlist ENLAZADA SIMPLE\n\n");
+    printf(" 1. INSERTAR AL INICIO               \n");
+    printf(" 2. INSERTAR AL FINAL                \n");
+    printf(" 3. INSERTAR EN UNA POSICION         \n");
+    printf(" 4. REPORTAR list                   \n");
+    printf(" 5. BUSCAR ELEMENTO                  \n");
+    printf(" 6. ELIMINAR ELEMENTO 'V'            \n");
+    printf(" 7. ELIMINAR ELEMENTOS CON value 'V' \n");
+    printf(" 8. SALIR                            \n");
  
-    cout<<"\n INGRESE OPCION: ";
+    printf("\n INGRESE OPCION: ");
 }
  
  
@@ -279,77 +261,24 @@ void menu1()
  
 int main()
 {
-    Tlista lista = NULL;
+    Tlist L = NULL;
     int op;     // opcion del menu
-    int _dato;  // elemenento a ingresar
-    int pos;    // posicion a insertar
- 
- 
-    system("color 0b");
- 
-    do
+    int data = 10;  // elemenento a ingresar
+    int i=0;
+
+    int nros[5] = {-1,5,1,9,2};
+
+    while(i < 5)
     {
-        menu1();  cin>> op;
+        insert_by_value(&L,nros[i]);
+        i++;
+    }
+
+    // srand(time(NULL));
+    // while(i-- > 0)
+    //     add(&L,rand()%dato);
  
-        switch(op)
-        {
-            case 1:
- 
-                 cout<< "\n NUMERO A INSERTAR: "; cin>> _dato;
-                 insertarInicio(lista, _dato);
-            break;
- 
- 
-            case 2:
- 
-                 cout<< "\n NUMERO A INSERTAR: "; cin>> _dato;
-                 insertarFinal(lista, _dato );
-            break;
- 
- 
-            case 3:
- 
-                 cout<< "\n NUMERO A INSERTAR: ";cin>> _dato;
-                 cout<< " Posicion : ";       cin>> pos;
-                 insertarElemento(lista, _dato, pos);
-            break;
- 
- 
-            case 4:
- 
-                 cout << "\n\n MOSTRANDO LISTA\n\n";
-                 reportarLista(lista);
-            break;
- 
- 
-            case 5:
- 
-                 cout<<"\n Valor a buscar: "; cin>> _dato;
-                 buscarElemento(lista, _dato);
-            break;
- 
-            case 6:
- 
-                cout<<"\n Valor a eliminar: "; cin>> _dato;
- 
-                eliminarElemento(lista, _dato);
-            break;
- 
-            case 7:
- 
-                cout<<"\n Valor repetido a eliminar: "; cin>> _dato;
- 
-                eliminaRepetidos(lista, _dato);
-            break;
- 
-                    }
- 
-        cout<<endl<<endl;
-        system("pause");  system("cls");
- 
-    }while(op!=8);
- 
- 
-   system("pause");
-   return 0;
+    show_list(L);
+
+    return 0;
 }
