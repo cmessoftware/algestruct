@@ -38,58 +38,58 @@ void add(Tlist **list, int value)
 /// @param value 
 void insert_by_value(Tlist *list, int value)
 {
-    // Tlist q;
-    // Tlist lst = *list;
+    Tlist q;
+    Tlist lst = *list;
 
-    // q = malloc(sizeof(Tlist));
-    // q->nro = value;
+    q = (Tlist*)malloc(sizeof(Tlist));
+    q->nro = value;
 
-    // //Es lista vacia --> agrego porque es el primero.
-    // if(lst == NULL)
-    // {
-    //     add(list,value);
-    //     return;
-    // }
+    //Es lista vacia --> agrego porque es el primero.
+    if(lst == NULL)
+    {
+        add(list,value);
+        return;
+    }
 
-    // //for( ; list->next != NULL; list = list->next)
-    // //Recorro la lista
-    // Tlist prev = lst;
+    //for( ; list->next != NULL; list = list->next)
+    //Recorro la lista
+    Tlist prev = lst;
   
-    // while(lst->next != NULL)
-    // {
-    //     if(prev == lst && lst->nro > value)  //Este nuevo valor se debe agregar al ppio.
-    //     {
-    //       add(&lst,value);
-    //       *list = lst;
-    //       return;            
-    //     } 
-    //     else if(lst->nro > value)
-    //     {
-    //         prev->next = q;
-    //         q->next = lst;   
-    //         return;
-    //     }
+    while(lst->next != NULL)
+    {
+        if(prev == lst && lst->nro > value)  //Este nuevo valor se debe agregar al ppio.
+        {
+          add(&lst,value);
+          *list = lst;
+          return;            
+        } 
+        else if(lst->nro > value) //Mayor que alguno nodo, menos el ultimo.
+        {
+            prev->next = q;
+            q->next = lst;   
+            return;
+        }
 
-    //     prev = lst;
-    //     lst = lst->next;
-    // }
+        prev = lst;
+        lst = lst->next;
+    }
     
-    // //Verificar si values sera el ultimo nodo o el anteultimo.
-    // if(lst->nro > value)  //Es el anteultimo
-    // {
-    //     prev->next = q;
-    //     lst->next = NULL;
-    //     q->next = lst;
-    //     return;
-    // }
-    // else //Es el ultimo.
-    // {
-    //     q->next = NULL;
-    //     lst->next = q;
-    //     return;
-    // }
+    //Verificar si values sera el ultimo nodo o el anteultimo.
+    if(lst->nro > value)  //Es el anteultimo
+    {
+        prev->next = q;
+        lst->next = NULL;
+        q->next = lst;
+        return;
+    }
+    else //Es el ultimo.
+    {
+        q->next = NULL;
+        lst->next = q;
+        return;
+    }
 
-    // return;
+    return;
 }
 
 void main()
