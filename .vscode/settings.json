@@ -29,5 +29,9 @@
     "**/.*/**",
     "**/.vscode",
     "**/.vscode/**"
-  ]
+  ],
+  "files.associations": {
+    "stdio.h": "c",
+    "time.h": "c"
+  }
 }

@@ -12,7 +12,7 @@ typedef struct Pedido
 
 typedef struct Receta
 {
-    int codeRec;
+    int codRec;
     int cantReg;
     int numReg;
 
@@ -21,6 +21,7 @@ typedef struct Receta
 
 typedef struct NombreReceta
 {
+  int codRec; 
   char nombre[15];
   int paridad;
 
@@ -35,18 +36,24 @@ typedef struct Ingrediente
 }Ingrediente;
 
 
-void add(struct Pedido **pedido, char *nombre)
+void addPedido(Pedido **P,int codigoReceta,int cantidad,char* domicilio,char *telefono)
 {
 	Pedido *nuevoPedido = malloc(sizeof(struct Pedido));
-	strcpy(nuevoPedido->nombre, nombre);
+    nuevoPedido->codigoReceta = codigoReceta;
+    nuevoPedido->cantidad = cantidad;
+  	strcpy(nuevoPedido->domicilio, domicilio);
+	strcpy(nuevoPedido->telefono, telefono);
+
 	nuevoPedido->sig = NULL;
-	if ((*pedido) == NULL)
+	if ((*P) == NULL)
 	{
-		*pedido = nuevoPedido;
-	}
+		*P = nuevoPedido;
+   }
 	else
 	{
-		add(&(*pedido)->sig, nombre);
+        nuevoPedido->sig = P;
+        *P = nuevoPedido;    
+		//addPedido(&(*pedido)->sig, nombre);
 	}
 }
 
@@ -59,7 +66,53 @@ void imprimir(struct Pedido *pedido)
 	}
 }
 
+void cargarPedidos(Pedido **p)
+{
+    int codigoReceta;
+    int cantidad;
+    char domicilio[50];
+    char telefono[20];
 
+    codigoReceta = 1;
+    cantidad = 12;
+    domicilio = "Calle X 123";
+    telefono = "555-122132"
+
+    addPedido(&p,codigoReceta,cantidad,domicilio,telefono)
+
+        codigoReceta = 1;
+    cantidad = 12;
+    domicilio = "Calle X 123";
+    telefono = "555-122132"
+
+    addPedido(&p,codigoReceta,cantidad,domicilio,telefono)
+
+
+    codigoReceta = 1;
+    cantidad = 12;
+    domicilio = "Calle X 123";
+    telefono = "555-122132"
+
+    addPedido(&p,codigoReceta,cantidad,domicilio,telefono)
+
+
+    codigoReceta = 1;
+    cantidad = 12;
+    domicilio = "Calle X 123";
+    telefono = "555-122132"
+
+    addPedido(&p,codigoReceta,cantidad,domicilio,telefono)
+
+
+    codigoReceta = 1;
+    cantidad = 12;
+    domicilio = "Calle X 123";
+    telefono = "555-122132"
+
+    addPedido(&p,codigoReceta,cantidad,domicilio,telefono)
+
+    
+}
 
 void main()
 {
@@ -76,5 +129,23 @@ void main()
 
     int nuevoStock = actualizarStock(PE);
 
+// Generar un archivo que contenga: Nombre de la receta (completo), cantidad solicitada, importe unitario (por
+// cada receta) y el importe total de ese pedido
+   generarArchivoRecetas(P);
+
+// Imprimir un listado con todos los pedidos de recetas inexistentes o que no se pueden atender en forma
+// completa, para llamar a esas personas y avisarles. En caso de no haber pedidos inexistentes o que no se pueden
+// atender en forma completa, informarlo.
+
+    imprimir(PE);
+
+// Imprimir un listado para entregarle al repartidor con los datos de cada pedido y lo que debe cobrar. En caso de
+// no haber ningún pedido a ser entregado informarlo
+
+    imprimirReparto(P);
+
+// Confeccionar una función que recibiendo los parámetros adecuados retorna el nombre completo de la
+// receta. Utilizar aritmética de punteros
+    generarNombreReceta(P);
 
 }

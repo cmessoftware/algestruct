@@ -272,7 +272,7 @@ void menu1()
     printf(" 1. INSERTAR AL INICIO               \n");
     printf(" 2. INSERTAR AL FINAL                \n");
     printf(" 3. INSERTAR EN UNA POSICION         \n");
-    printf(" 4. REPORTAR list                   \n");
+    printf(" 4. REPORTAR list                    \n");
     printf(" 5. BUSCAR ELEMENTO                  \n");
     printf(" 6. ELIMINAR ELEMENTO 'V'            \n");
     printf(" 7. ELIMINAR ELEMENTOS CON value 'V' \n");
@@ -324,7 +324,7 @@ int main()
     deleteElement(listAux,44);
     
     printf("Verifico si borro adecuadamente.\n");
-    show_list(L);
+    show_list(listAux);
 
     return 0;
 }
