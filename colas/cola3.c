@@ -29,7 +29,8 @@ nodo* crear_nodo(int dato)
 
    return u;
 }
-
+// En p tenemos la cabera de la cola
+// y en u el ultimo nodo ingresado.
 void push(nodo** p,nodo** u, nodo *q)
 {
    printf("push_nodo\n");
