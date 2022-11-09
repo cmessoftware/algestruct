@@ -43,30 +43,21 @@ typedef struct Orden
      
 }
 
-TPedido* desapilarPedido(TPedido **pa)
+TPedido desapilarPedido(TPedido **pa)
 {
-        TPedido *aux;   
-        
-        if(*pa == NULL)  //Pila vacia
-        {
-           return NULL;
-        }
-        else
-        {
-           
-        //    while((*pa)->sig != NULL)
-        //    {
-        //         prev = (*pa);
-        //         (*pa) = (*pa)->sig;
-        //    }
-           
-        //    prev->sig = NULL; //Prev es el nuevo Ultimo.
+    TPedido* aux;
+    TPedido datos;
 
-           aux = *pa;
-           (*pa)->sig = NULL; 
-           return aux;
-        }
+	datos=**pa;
 
+	aux=*pa;
+
+	*pa=(*pa)->sig;
+	free(aux);
+
+    datos.sig = NULL;
+
+    return datos; 
 }
 
 float GetMonto(int servicio)
@@ -78,6 +69,21 @@ void addOrdenes(TPedido* p, float monto)
 
 void mostrar(TPedido* p)
 {
+    if(p == NULL)
+    {
+        puts("Pila vacia\n");
+        return;
+    }
+
+    if(p->sig == NULL)  //Hay un solo elemento.
+    {
+        printf("Servicio: %d\n",p->servicio);
+        printf("Cod Cliente: %d\n",p->codCliente);
+        printf("Cantidad: %d\n",p->cantidad);
+        puts("------------------------------------");
+    }
+
+
     for(;p->sig!= NULL; p = p->sig)
     {
         printf("Servicio: %d\n",p->servicio);
@@ -85,6 +91,17 @@ void mostrar(TPedido* p)
         printf("Cantidad: %d\n",p->cantidad);
         puts("------------------------------------");
     }
+}
+
+int getLength(TPedido* p)
+{
+    int cant = 0;
+
+    while(p->sig != NULL)
+        cant++;
+
+    return cant;
+    
 }
 
 void main()
@@ -95,7 +112,7 @@ void main()
     int codCliente = 0;
     int servicio = 0;
 
-    for(int i=0 ; i < 10; i++)
+    for(int i=0 ; i < 5; i++)
     {
         cantidad = 10+i;
         codCliente = 123+i;
@@ -103,24 +120,22 @@ void main()
         apilarPedido(&PActual,codCliente , servicio, cantidad);
     }
 
-    char op;
+//    for(int x = 1 ; x <= getLength(PActual);x++)
+   for(int x = 1 ; x <= 5;x++)
+   {
+        puts("PILA ORIGNAL\n");
+        mostrar(PActual);
+        puts("------------------------------------");
 
-    // while(op != 'S')
-    // {
-    //     printf("Ya son las 15?\n (S/N)");
-    //     scanf("%c",&op);
-    // }
+        TPedido Pdesapilado = desapilarPedido(&PActual);
 
-    mostrar(PActual);
-    puts("------------------------------------");
-
-    TPedido* Pdesapilado = desapilarPedido(&PActual);
-
-    mostrar(PActual);
-    puts("------------------------------------");
-    mostrar(Pdesapilado);
-    puts("------------------------------------");
-       
+        printf("PILA %d DESAPILADOS\n",x);
+        mostrar(PActual);
+        puts("------------------------------------");
+        puts("NODO DESAPILADO\n");
+        mostrar(&Pdesapilado);
+        puts("------------------------------------");
+   }
     
     // for(int i=0 ; i < 10; i++)
     // {

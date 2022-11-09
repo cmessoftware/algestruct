@@ -97,8 +97,6 @@ void main()
     Tlist *L = NULL;
     int value = 10;
 
-
-
     for(int i =0 ; i < 5;i++)
         add(&L,value+i);
 
