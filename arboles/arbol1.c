@@ -19,16 +19,18 @@ void inorder (arbolNodo * hoja);
 void preorder (arbolNodo * hoja);
 void postorder (arbolNodo * hoja);
 int promedio(arbolNodo *hoja, int );
-arbolNodo* crearNodo(arbolNodo **hoja , arbolNodo* der, arbolNodo* izq, int dato);
+arbolNodo* crearNodo(int dato);
+arbolNodo * crearManual();
 
-int
-main ()
+
+int main ()
 {
   int cont = 0, raiz, cont1 = 0;
   printf ("arboles\n");
   arbolNodo *arbol = NULL;
   arbolNodo *aux = NULL;
-  crear (&arbol, &raiz);
+  //crear (&arbol, &raiz);
+  arbol = crearManual();
   printf ("**************\n");
   aux = arbol;
   printf ("mostrar arbol INORDER\n");
@@ -40,25 +42,22 @@ main ()
   printf ("\n***************\n");
   aux = arbol;
   printf ("mostrar arbol POSTORDER\n");
-    postorder(arbol);
+  postorder(arbol);
   arbol = aux;
   printf ("\n***************\n");
 
-
-
-  
   return 0;
 }
 
-arbolNodo* crearNodo(arbolNodo **hoja , arbolNodo* der, arbolNodo* izq, int dato)
-{
-      //Creo la hoja vacia
-      (*hoja) = (arbolNodo *) malloc (sizeof (arbolNodo));
-      (*hoja)->dato = dato;
-      (*hoja)->der = der;
-      (*hoja)->izq = izq;
 
-      return (*hoja);
+arbolNodo* crearNodo(int dato)
+{
+      arbolNodo* hoja = (arbolNodo *) malloc (sizeof (arbolNodo));
+      hoja->dato = dato;
+      hoja->der = NULL;
+      hoja->izq = NULL;
+
+      return hoja;
 }
 
 void crear (arbolNodo ** hoja, int *raiz)
@@ -66,16 +65,51 @@ void crear (arbolNodo ** hoja, int *raiz)
   int num;
   int i = 0;
   *raiz = i;
-  int elementos[] = {1,10,5,15,8,11,6,18,-5,0};
+  int elementos[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
   while(i < CANT_HOJAS)
   {
-     srand(time(NULL));
      insertar (&(*hoja), elementos[i]);
      i++;
   }
- 
 }
 
+arbolNodo * crearManual()
+{
+    int x = 0;
+    arbolNodo *hoja = crearNodo(++x);
+    printf("%s: %d\n","raiz",x);
+    hoja->izq = crearNodo(++x);
+    printf("%s: %d\n","izq",x);
+    hoja->der = crearNodo(++x);
+    printf("%s: %d\n","der",x);
+    hoja->izq->izq = crearNodo(++x);
+    printf("%s: %d\n","izq",x);
+    hoja->izq->der = crearNodo(++x);
+    printf("%s: %d\n","der",x);
+    hoja->der->izq = crearNodo(++x);
+    printf("%s: %d\n","izq",x);
+    hoja->der->der = crearNodo(++x);
+    printf("%s: %d\n","der",x);
+    hoja->izq->izq->izq = crearNodo(++x);
+    printf("%s: %d\n","izq",x);
+    hoja->izq->izq->der = crearNodo(++x);
+    printf("%s: %d\n","der",x);
+    hoja->izq->der->izq = crearNodo(++x);
+    printf("%s: %d\n","izq",x);
+    hoja->izq->der->der = crearNodo(++x);
+    printf("%s: %d\n","der",x);
+    hoja->der->izq->izq = crearNodo(++x);
+    printf("%s: %d\n","izq",x);
+    hoja->der->izq->der = crearNodo(++x);
+    printf("%s: %d\n","der",x);
+    hoja->der->der->izq = crearNodo(++x);
+    printf("%s: %d\n","izq",x);
+    hoja->der->der->der = crearNodo(++x);
+    printf("%s: %d\n","der",x);
+   
+    return hoja;
+
+}
 
 void insertar (arbolNodo ** hoja, int elem)
 {
@@ -84,7 +118,7 @@ void insertar (arbolNodo ** hoja, int elem)
     return;
   if (*hoja == NULL)
   {		//Creo la hoja vacia
-    crearNodo(hoja , NULL ,NULL, elem);
+    hoja = crearNodo(elem);
   }
   else
   {
