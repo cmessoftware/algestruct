@@ -107,8 +107,9 @@ TPedido desapilarPedidoRec(TPedido **pa)  //Vacia la pila
 
     printf("Servicio: %d\n",(*pa)->servicio);
     dato = **pa;
-  
     desapilarPedidoRec(&((*pa)->sig));    
+
+    //Tenes que poder pasar *pa a NULL porque el mostrar se muestra toda la pila.
 
     return dato;
 }
